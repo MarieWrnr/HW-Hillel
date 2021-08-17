@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+
+        const choosenLimit = prompt('Please, choose our limit to start game: ');
+        const randomSetNum = Math.floor(Math.random() * choosenLimit);
+
+        let userTrial = Number.parseInt(prompt('What number did I think of?'));
+        let counterMoves = 0;
+
+        while (userTrial != randomSetNum) {
+            if (userTrial > randomSetNum)
+                alert('Set number is smaller than yours. Try again!');
+            else
+                alert('Set number is bigger than yours Try again!');
+
+            userTrial = Number.parseInt(prompt('What number did I think of?'));
+            counterMoves++;
+        }
+
+        alert('Well done, it was ' + userTrial + '. You made ' + counterMoves + ' moves');
+    </script>
+</head>
+<body>
+
+</body>
+</html>
