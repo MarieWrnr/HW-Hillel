@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+      /*
+      MOUNTAIN VIEW ALFA
+
+Написать программу-генератор "горного ландшафта" , которая будет выводить в консоль N штук гор, высота которых растёт от 1 до N,
+
+N задаётся пользователем.
+      */
+      const N = prompt('Input count of mountains: ');
+      let levelMount = 0;
+      let countGround = '';
+
+      //построение горы
+
+      for (let i = 1; i <= N; i++) {
+
+          for (countGround; countGround.length <= i; countGround+='#') {//идём вверх
+              if (countGround.length == i)
+                  console.log(countGround + '|');
+              else
+                  console.log(countGround + '\\');
+          }
+
+          for (countGround = countGround.substr(0, countGround.length - 2); countGround != ''; countGround = countGround.substr(0, countGround.length - 1)) {
+              console.log(countGround + '\/');
+          }
+
+          console.log('\/');
+          console.log('');
+      }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
