@@ -4,68 +4,232 @@
     <meta charset="UTF-8">
     <title>Title</title>
   <script>
-    /*MOUNTAIN VIEW PRO
+    let toBegin = false;
+    let N;
+    let H1;
+    let H2;
+    let HTree;
 
-Добавим чуть вариативности! Выводим в консоль N гор со случайной высотой от H1 до H2. Иногда, c вероятностью X на каждой ступеньке, гора может заканчиваться обрывом(заканчиваем рисовать гору)
+    while(!toBegin) {
+        N = Number.parseInt(prompt('Input count of mountains: '));
+        H1 = Number.parseInt(prompt('Then start point: '));
+        H2 = Number.parseInt(prompt('Then finish point: '));
+        HTree = Number.parseInt(prompt('Input max height of tree: '));
 
-N, Н1, H2, X задаются пользователем, либо хардкодятся.
-
-Для удобства пусть X будет целым 0..100
-Также, на каждой ступеньке горы случайным образом могут быть применены такие модификаторы:
-
-ступенька может быть на один блок выше или ниже чем должна
-сверху может расти трава: = или -*
-сверху может расти дерево (разной длинны): ===@
-на вершине иногда иногда может быть могилка путника: ]-+
-в глубине гор иногда могут быть алмазы: ◆*/
-
-    const N = Number.parseInt(prompt('Input count of mountains: '));
-    const H1 = Number.parseInt(prompt('Then start point: '));
-    const H2 = Number.parseInt(prompt('Then finish point: '));
+        if (!isNaN(N) && !isNaN(H1) && !isNaN(H2) && !isNaN(HTree) && H1 < H2) {
+            toBegin = true;
+        }
+        else {
+            alert('Try again!');
+        }
+    }
 
 
     const chance_break = 7 / 100;
+    const chance_stair_low = 8 / 100; // если ниже - предварительно не добавлять звездошку
+    const chance_stair_high = 18 / 100; // если выше - предварительно добавлять еще звездошку
+    const grass_usual = 15 / 100;
+    const grass_flower = 26 / 100;
+    const chance_tree = 25 / 100;
+    const chance_grave = 33 / 100;
+    const chance_diamonds = 5 / 100;
+
+    const maxDiamonds = 4;
+
 
     let countGround = '';
     let mountHeight = 0;
 
     //построение горы
+    let higherStair;
+    let lowerStair;
+    let whatStair;
+
+    let whatGrass;
+    let willbeTree;
+    let treeLength;
+
+    let willbeGrave;
+
+    let willbeDiamonds;
+    let countDiamonds;
+
+    let bark;
+    let diamond = '';
+
+    let flowerGrass = '-*';
+    let usGrass = '=';
+
+    let readyStr = '';
 
     for (let i = 1; i <= N; i++) { //количество гор
         mountHeight = Math.round(Math.random() * (H2 - H1) + H1); //получаем рандомное число в диапазоне от H1 до H2
 
-        //console.log('MOUNTHEIGHT IS ' + mountHeight);
-        //console.log(X);
-
         let willMountEnd = false;
 
         for (countGround; countGround.length <= mountHeight; countGround+='#') {//идём вверх
+
             willMountEnd = Math.random() <= chance_break;
+            willbeDiamonds = Math.random() <= chance_diamonds;
+
+            whatStair = Math.random();
+            whatGrass = Math.random();
 
             if (willMountEnd) {
                 break;
             }
 
-            if (countGround.length == mountHeight)
-                console.log(countGround + '|');
-            else
-                console.log(countGround + '\\');
+            if (willbeDiamonds) {
+                countDiamonds = Math.round(Math.random() * (maxDiamonds - 1) + 1);
+
+                for (diamond = ''; diamond.length < countDiamonds; diamond += '◆') {
+                    continue;
+                }
+            }
+
+            if (countGround.length == mountHeight) {
+
+                readyStr = countGround + diamond + '|';
+                willbeGrave = Math.random() <= chance_grave;
+
+                if (willbeGrave) {
+                    readyStr +=  ']-+';
+                }
+            }
+            else {
+                if (whatStair < chance_stair_low) {
+                    lowerStair = countGround.substr(0, countGround.length - 1);
+                    readyStr = lowerStair + diamond + '\\';
+                }
+
+                else if (whatStair < chance_stair_high && whatStair > chance_stair_low) {
+                    higherStair = countGround + '#';
+                    readyStr = higherStair + diamond + '\\';
+                }
+
+                else {
+                    //console.log('Gotcha2');
+                    readyStr = countGround + '\\';
+                }
+            }
+
+            if (!willbeGrave) {
+                if (whatGrass < grass_usual) { //рисуем обычную травку
+                    readyStr += '=';
+                }
+                else if (whatGrass > grass_usual && whatGrass < grass_flower) {
+                    readyStr += '-*';
+                }
+                else {//будем дерево рисовац?
+                    willbeTree = Math.random() <= chance_tree;
+
+                    if (willbeTree) {
+                        treeLength = Math.round(Math.random() * (HTree - 1) + 1);
+
+                        for (bark = ''; bark.length < treeLength; bark += '=') {
+                            continue;
+                        }
+
+                        readyStr += bark + '@';
+                    }
+                }
+            }
+
+            console.log(readyStr);
+            readyStr = '';
         }
 
         if (!willMountEnd) {
 
             for (countGround = countGround.substr(0, countGround.length - 2); countGround != ''; countGround = countGround.substr(0, countGround.length - 1)) { //идем вниз
                 willMountEnd = Math.random() <= chance_break;
+                willbeDiamonds = Math.random() <= chance_diamonds;
+
+                whatStair = Math.random();
+                whatGrass = Math.random();
 
                 if (willMountEnd) {
                     break;
                 }
 
-                console.log(countGround + '\/');
+                if (willbeDiamonds) {
+                    countDiamonds = Math.round(Math.random() * (maxDiamonds - 1) + 1);
+
+                    for (diamond = ''; diamond.length < treeLength; diamond += '◆') {
+                        continue;
+                    }
+
+                }
+
+                if (whatStair < chance_stair_low) {
+                    lowerStair = countGround.substr(0, countGround.length - 1);
+                    readyStr = lowerStair + diamond + '\/';
+                }
+                else if (whatStair < chance_stair_high && whatStair > chance_stair_low) {
+                    higherStair = countGround + '#';
+                    readyStr = higherStair + diamond + '\/';
+                }
+                else {
+                    readyStr = countGround + diamond + '\/';
+                }
+
+                if (whatGrass < grass_usual) { //рисуем обычную травку
+                    readyStr += '=';
+                }
+                else if (whatGrass > grass_usual && whatGrass < grass_flower) {
+                    readyStr += '-*';
+                }
+                else {
+                    willbeTree = Math.random() <= chance_tree;
+
+                    if (willbeTree) {
+                        treeLength = Math.round(Math.random() * (HTree - 1) + 1);
+
+                        for (bark = ''; bark.length < treeLength; bark += '=') {
+                            continue;
+                        }
+
+                        readyStr += bark + '@';
+                    }
+                }
+
+                console.log(readyStr);
+                readyStr = '';
             }
 
             if (!willMountEnd) {
-                console.log('\/');
+                willbeDiamonds = Math.random() <= chance_diamonds;
+
+                if (willbeDiamonds) {
+                    countDiamonds = Math.round(Math.random() * (maxDiamonds - 1) + 1);
+
+                    for (diamond = ''; diamond.length < treeLength; diamond += '◆') {
+                        continue;
+                    }
+
+                }
+                readyStr = diamond + '\/';
+
+                if (whatGrass < grass_usual) { //рисуем обычную травку
+                    readyStr += '=';
+                }
+                else if (whatGrass > grass_usual && whatGrass < grass_flower) {
+                    readyStr += '-*';
+                }
+                else {
+                    if (willbeTree) {
+                        treeLength = Math.round(Math.random() * (HTree - 1) + 1);
+
+                        for (bark = ''; bark.length < treeLength; bark += '=') {
+                            continue;
+                        }
+
+                        readyStr += bark + '@';
+                    }
+                }
+
+                console.log(readyStr);
+                readyStr = '';
             }
         }
 
