@@ -12,7 +12,6 @@
 N задаётся пользователем.
       */
       const N = prompt('Input count of mountains: ');
-      let levelMount = 0;
       let countGround = '';
 
       //построение горы
@@ -26,7 +25,7 @@ N задаётся пользователем.
                   console.log(countGround + '\\');
           }
 
-          for (countGround = countGround.substr(0, countGround.length - 2); countGround != ''; countGround = countGround.substr(0, countGround.length - 1)) {
+          for (countGround = countGround.substr(0, countGround.length - 2); countGround != ''; countGround = countGround.substr(0, countGround.length - 1)) { //идем вниз
               console.log(countGround + '\/');
           }
 

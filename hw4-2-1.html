@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <script>
+    /*MOUNTAIN VIEW PRO
+
+Добавим чуть вариативности! Выводим в консоль N гор со случайной высотой от H1 до H2. Иногда, c вероятностью X на каждой ступеньке, гора может заканчиваться обрывом(заканчиваем рисовать гору)
+
+N, Н1, H2, X задаются пользователем, либо хардкодятся.
+
+Для удобства пусть X будет целым 0..100
+Также, на каждой ступеньке горы случайным образом могут быть применены такие модификаторы:
+
+ступенька может быть на один блок выше или ниже чем должна
+сверху может расти трава: = или -*
+сверху может расти дерево (разной длинны): ===@
+на вершине иногда иногда может быть могилка путника: ]-+
+в глубине гор иногда могут быть алмазы: ◆*/
+
+    const N = Number.parseInt(prompt('Input count of mountains: '));
+    const H1 = Number.parseInt(prompt('Then start point: '));
+    const H2 = Number.parseInt(prompt('Then finish point: '));
+
+
+    const chance_break = 7 / 100;
+
+    let countGround = '';
+    let mountHeight = 0;
+
+    //построение горы
+
+    for (let i = 1; i <= N; i++) { //количество гор
+        mountHeight = Math.round(Math.random() * (H2 - H1) + H1); //получаем рандомное число в диапазоне от H1 до H2
+
+        //console.log('MOUNTHEIGHT IS ' + mountHeight);
+        //console.log(X);
+
+        let willMountEnd = false;
+
+        for (countGround; countGround.length <= mountHeight; countGround+='#') {//идём вверх
+            willMountEnd = Math.random() <= chance_break;
+
+            if (willMountEnd) {
+                break;
+            }
+
+            if (countGround.length == mountHeight)
+                console.log(countGround + '|');
+            else
+                console.log(countGround + '\\');
+        }
+
+        if (!willMountEnd) {
+
+            for (countGround = countGround.substr(0, countGround.length - 2); countGround != ''; countGround = countGround.substr(0, countGround.length - 1)) { //идем вниз
+                willMountEnd = Math.random() <= chance_break;
+
+                if (willMountEnd) {
+                    break;
+                }
+
+                console.log(countGround + '\/');
+            }
+
+            if (!willMountEnd) {
+                console.log('\/');
+            }
+        }
+
+        countGround = '';
+        console.log('');
+    }
+  </script>
+</head>
+<body>
+
+</body>
+</html>
